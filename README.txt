@@ -32,7 +32,7 @@ Build instructions
 Windows: Use the Git Bash program (installed with Git) to get a Unix-style terminal. 
 Other systems: Use your favorite terminal program.
 
-From the terminak, run:
+From the terminal, run:
 git clone http://github.com/udacity/fullstack-nanodegree-vm fullstack
 
 This will give you a directory named fullstack.
@@ -41,15 +41,17 @@ This will give you a directory named fullstack.
 
 9. Once it is up and running, type vagrant ssh to log into it. This will log your terminal in to the virtual machine, and you'll get a Linux shell prompt. When you want to log out, type exit at the shell prompt.  To turn the virtual machine off (without deleting anything), type vagrant halt. If you do this, you'll need to run vagrant up again before you can log into it.
 
-10. Go to the tournament folder by typing cd/vagrant/forum
+10. Go to the tournament folder by typing cd/vagrant/tournament
 
 11. If you stype ls, the following files will be shown; tournament.py, tournament.sql and tournament_test.py. These are just empty shell files.
 
 12. Replace all 3 files from your local vagrant directory with the files from GitHub. The vagrant directory is determined when you install vagrant, typically at C:\Users\XXX\fullstack\vagrant\tournament, in which XXX refers to your user acount name.
 
-13. Using the terminal, test the code by typing python tournament_test.py
+13. To setup the database, please type psql -f tournament.sql
 
-14. You should see the following results:
+14. Using the terminal, test the code by typing python tournament_test.py
+
+15. You should see the following results:
 
 vagrant@vagrant-ubuntu-trusty-32:/vagrant/tournament$ python tournament_test.py
 1. Old matches can be deleted.
