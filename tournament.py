@@ -21,7 +21,8 @@ def deleteMatches():
     
     conn = connect()
     c = conn.cursor()
-    c.execute("DELETE FROM Matches;")
+    query = "DELETE FROM Matches;"
+    c.execute(query)
     conn.commit()
     conn.close()
 
@@ -34,7 +35,8 @@ def deletePlayers():
     
     conn = connect()
     c = conn.cursor()
-    c.execute("DELETE FROM Players;")
+    query = "DELETE FROM Players;"
+    c.execute(query)
     conn.commit()
     conn.close()
 
@@ -46,11 +48,12 @@ def countPlayers():
     
     conn = connect()
     c = conn.cursor()
-    c.execute("SELECT COUNT(*) as num FROM Players;")
-    for row in c:
-     conn.commit()
-     conn.close()
-     return row[0]
+    query = "SELECT COUNT(*) as num FROM Players;"
+    c.execute(query)
+    result = c.fetchone()[0]
+    conn.commit()
+    conn.close()
+    return result
 
 
 
@@ -69,7 +72,9 @@ def registerPlayer(name):
     """
     conn = connect()
     c = conn.cursor()
-    c.execute("INSERT INTO Players(name) VALUES ('"+name.replace("'", "''")+"');")
+    query = "INSERT INTO Players (name) VALUES (%s);"
+    param = (name,)
+    c.execute(query, param)
     conn.commit()
     conn.close()
 
@@ -98,16 +103,28 @@ def playerStandings():
     and references the id with the name from the Players table.
     All players are included in the return list, even if a player has not been registered in any matches.
     """
+
     conn = connect()
     c = conn.cursor()
-    c.execute("SELECT Players.id as Id, Players.name as Name, COUNT(wincount.winner) as Wins, COUNT(matchcount.winner) as Games FROM Players LEFT JOIN Matches as wincount on wincount.winner = Players.id LEFT JOIN Matches as matchcount on (matchcount.player1 = Players.Id OR matchcount.player2 = Players.Id) GROUP BY Players.id, Players.name ORDER BY Wins DESC;")
-    playerStanding = []
-    for row in c:
-        playerStanding.append(row)
+    query = """SELECT Players.id as Id,
+        Players.name as Name,
+        COUNT(wincount.winner) as Wins,
+        COUNT(matchcount.winner) as Games 
+        FROM Players 
+        LEFT JOIN 
+        Matches as wincount 
+        on wincount.winner = Players.id 
+        LEFT JOIN 
+        Matches as matchcount 
+        on (matchcount.player1 = Players.Id 
+        OR matchcount.player2 = Players.Id) 
+        GROUP BY Players.id, Players.name 
+        ORDER BY Wins DESC;"""
+    c.execute(query)
+    playerStanding = c.fetchall()
     conn.commit()
     conn.close()
     return playerStanding
-
 
 def reportMatch(winner, loser):
     """Records the outcome of a single match between two players.
@@ -126,7 +143,9 @@ def reportMatch(winner, loser):
     """
     conn = connect()
     c = conn.cursor()
-    c.execute("INSERT INTO Matches(player1, player2, winner) VALUES('"+str(winner)+"','"+str(loser)+"','"+str(winner)+"')");
+    query = "INSERT INTO Matches(player1, player2, winner) VALUES (%s,%s,%s);"
+    param = (winner,loser,winner,)
+    c.execute(query, param)
     conn.commit()
     conn.close()
  
@@ -184,12 +203,3 @@ def swissPairings():
                 if rank2 == rank+1:
                   pairing.append((player[0],player[1],player2[0],player2[1]))
     return pairing
-
-
-
-
-         
-
-     
-
-

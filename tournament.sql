@@ -1,5 +1,8 @@
 -- Table definitions for the tournament project.
 
+-- Drop database if database exists
+DROP DATABASE IF EXISTS tournament;
+
 -- Create a database called tournament
 CREATE DATABASE tournament;
 \c tournament;
@@ -13,7 +16,12 @@ CREATE TABLE Players(id serial primary key, name text);
 -- Matches table stores the matches played between two players 
 -- Matches table also the winning record of each match
 
-CREATE TABLE Matches(id serial primary key, player1 serial references Players(id), player2 serial references Players(id), winner serial references Players(id));
+CREATE TABLE Matches(
+id serial primary key, 
+player1 serial references Players(id), 
+player2 serial references Players(id), 
+winner serial references Players(id)
+);
 
 
 
